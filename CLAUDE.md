@@ -113,6 +113,8 @@ python3 tools/manifest.py              # пересчитать статусы �
 
 ## Публикация
 
+Репозиторий: https://github.com/maxbzd/HowToLiveBetter (ветка `main`), сайт: https://maxbzd.github.io/HowToLiveBetter/. Загружено 23.10.2026.
+
 `dist/index.html` самодостаточен (внешние только Google Fonts). Pages не умеет отдавать папку `dist` напрямую (только корень или `/docs`), поэтому есть `.github/workflows/pages.yml`: Settings → Pages → Source: GitHub Actions. Список записей для врача и юриста: `docs/review-checklist.md` (`python3 tools/review_list.py`). В README указать атрибуцию: основа HowToLiveBetter (eternity4719), Unlicense. **Перед публикацией:** врач проверяет медицинские записи (экстренные, лекарства, беременность, дозы), юрист или Макс перечитывает российские нормы.
 
 ## Что не делать
