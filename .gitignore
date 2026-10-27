@@ -3,3 +3,5 @@ __pycache__/
 node_modules/
 *.pyc
 .DS_Store
+tests/perf_last.png
+*_tmp.*

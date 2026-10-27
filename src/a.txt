@@ -1,6 +1,9 @@
 =====HEAD=====
 <meta name="theme-color" content="#05080A" id="tc">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Geologica:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Geologica:wght@300;400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Geologica:wght@300;400;500;600&display=swap"></noscript>
 =====CSS=====
 :root{
   box-sizing:border-box;
@@ -45,9 +48,9 @@ kbd{font:400 11.5px var(--sans);border:1px solid var(--line);border-bottom-width
   background:radial-gradient(80% 60% at 55% 0,var(--sky1),transparent 75%);
   -webkit-mask-image:linear-gradient(#000 55%,transparent);mask-image:linear-gradient(#000 55%,transparent)}
 .sky::before{content:"";position:absolute;inset:-12% -20% auto -20%;height:75%;transform:rotate(-12deg);
-  background:linear-gradient(90deg,transparent 20%,rgba(150,185,205,.07) 36%,rgba(200,220,230,.15) 50%,rgba(150,185,205,.07) 64%,transparent 80%);filter:blur(28px);opacity:var(--star)}
-.sky i{position:absolute;border-radius:50%;background:#fff;opacity:0;transition:opacity 1.2s}
-.sky.on i{opacity:calc(var(--o)*var(--star))}
+  background:linear-gradient(90deg,transparent 20%,rgba(150,185,205,.07) 36%,rgba(200,220,230,.15) 50%,rgba(150,185,205,.07) 64%,transparent 80%);-webkit-mask-image:linear-gradient(transparent,#000 38%,#000 62%,transparent);mask-image:linear-gradient(transparent,#000 38%,#000 62%,transparent);will-change:transform;opacity:var(--star)}
+.sky i{position:absolute;border-radius:50%;background:color-mix(in srgb,#fff calc(var(--o)*var(--star)*100%),transparent);opacity:0;transition:opacity 1.2s}
+.sky.on i{opacity:1}
 .main>*:not(.sky):not(.tb){position:relative;z-index:1}
 
 /* боковая панель */
@@ -159,6 +162,7 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 .vt .i{width:18px;height:18px}
 
 /* плитки */
+.more{height:1px;pointer-events:none}
 .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
 .tile{position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:24px 24px 18px;box-shadow:inset 0 1px 0 var(--hi);transition:background .2s,border-color .2s,transform .2s}
 .tile:hover{background:color-mix(in srgb,var(--card) 60%,var(--card2));border-color:color-mix(in srgb,var(--ink) 16%,transparent);transform:translateY(-2px)}
@@ -335,21 +339,25 @@ html{scroll-behavior:smooth}
 @keyframes float{50%{transform:translateY(-6px)}}
 @keyframes pop2{from{opacity:0;transform:scale(.96) translateY(8px)}}
 @keyframes drift{to{transform:rotate(-12deg) translate3d(3%,1%,0)}}
-@keyframes tw{0%,100%{opacity:calc(var(--o)*var(--star))}50%{opacity:calc(var(--o)*var(--star)*.18)}}
+@keyframes tw{0%,100%{opacity:1}50%{opacity:.18}}
 .a{opacity:0;animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:var(--d,0ms)}
 .w{display:inline-block;opacity:0;animation:wordin 1s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:var(--d,0ms)}
-.reveal{opacity:0;translate:0 26px}
-.reveal.in{opacity:1;translate:0 0}
-.tile,.lrow{transition:background .25s,border-color .25s,transform .28s cubic-bezier(.2,.8,.2,1),opacity .8s cubic-bezier(.2,.8,.2,1) var(--d,0ms),translate .8s cubic-bezier(.2,.8,.2,1) var(--d,0ms)}
+.reveal{opacity:0}
+.reveal.in{animation:tilein .55s cubic-bezier(.2,.8,.2,1) var(--d,0ms) both}
+.reveal.in.done{animation:none;opacity:1}
+@keyframes tilein{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.tile,.lrow{transition:background .25s,border-color .25s,transform .28s cubic-bezier(.2,.8,.2,1)}
 .tile:active{transform:scale(.994)}
 .empty:not([hidden]){animation:rise .5s cubic-bezier(.2,.8,.2,1)}
+.empty[hidden] .ei{animation:none}
 .empty .ei{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);color:var(--muted);animation:float 5s ease-in-out infinite}
 .js-count b,.js-progress b{display:inline-block;animation:bump .55s cubic-bezier(.2,.8,.2,1)}
 
 /* небо */
 .sky{transform:translate3d(0,calc(var(--sy,0)*-.14px),0);will-change:transform}
 .sky::before{animation:drift 40s ease-in-out infinite alternate}
-.sky.on i.tw{animation:tw var(--td,5s) ease-in-out infinite;animation-delay:var(--dl,0s)}
+.sky.rest i.tw,.sky.rest::before,.lock .sky i.tw,.lock .sky::before{animation-play-state:paused!important}
+.sky.on i.tw{animation:tw var(--td,5s) ease-in-out infinite;animation-delay:var(--dl,0s);will-change:opacity}
 .tb::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent));opacity:.75;transform-origin:left;transform:scaleX(var(--sp,0));pointer-events:none}
 
 /* подсветка под курсором */
@@ -556,9 +564,20 @@ body[data-mode="sky"] .chips input:checked+label .n{color:var(--muted)}
 #c-work+label{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='7' width='18' height='13' rx='2'/%3E%3Cpath d='M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M3 13h18'/%3E%3C/svg%3E")}
 @media (prefers-reduced-motion:reduce){
   .a,.w{opacity:1!important;filter:none!important;transform:none!important}
-  .reveal{opacity:1!important;translate:none!important}
+  .reveal{opacity:1!important;animation:none!important}
   .sky{transform:none!important}
 }
+/* отступы в сегментных фильтрах: «Получите» на всю ширину, пять вариантов в ряд или 3+2 */
+.bg.gets{grid-template-columns:minmax(0,1fr);gap:8px;container-type:inline-size}
+.seg-auto{display:flex;flex-wrap:wrap;gap:4px}
+.seg-auto>span{flex:1 1 auto}
+.bg .seg>i.thumb{top:0;bottom:auto;left:0;width:var(--tw,0px);height:var(--th,0px);transform:translate(var(--tx,0px),var(--ty,0px))}
+.bg .seg:not(.seg-auto){grid-template-columns:repeat(3,minmax(max-content,1fr))}
+.bg .seg label{padding:4px 6px;font-size:12.5px}
+.bg .seg.seg-auto label{padding:6px 10px;min-height:38px}
+@media (max-width:520px){.bg .seg label{font-size:12.5px}.bg .seg.seg-auto label{padding:6px 8px}}
+@container (max-width:350px){.seg-auto>span{flex:1 1 30%}}
+@media (max-width:720px){.tb .wrap{gap:12px}.crumb{flex:none}.crumb>span{display:none}.sbox{flex:1 1 auto;width:auto;min-width:0}}
 =====HTML=====
 <a class="skip" href="#list">К списку советов</a>
 <div class="app">
@@ -706,10 +725,11 @@ var docTitle=document.title;
   var sky=$("sky"),h="",seed=11;
   function r(){seed=(seed*9301+49297)%233280;return seed/233280;}
   for(var i=0;i<170;i++){
-    var s=r()<.86?1:(r()<.7?1.6:2.2),tw=r()<.3;
+    var s=r()<.86?1:(r()<.7?1.6:2.2),tw=r()<.16;
     h+="<i"+(tw?" class='tw'":"")+" style='left:"+(r()*100).toFixed(2)+"%;top:"+(r()*100).toFixed(2)+"%;width:"+s+"px;height:"+s+"px;--o:"+(0.25+r()*0.7).toFixed(2)+";--td:"+(3.5+r()*4).toFixed(1)+"s;--dl:"+(r()*5).toFixed(1)+"s'></i>";
   }
   sky.innerHTML=h;requestAnimationFrame(function(){sky.classList.add("on");});
+  if("IntersectionObserver" in window){new IntersectionObserver(function(es){sky.classList.toggle("rest",!es[0].isIntersecting);},{rootMargin:"60px"}).observe(sky);}
 })();
 $("bi").innerHTML=C.icon("moon");$("menu").innerHTML=C.icon("list");$("sico").innerHTML=C.icon("search");
 $("ns").innerHTML=C.icon("save");$("v-grid").innerHTML=C.icon("grid");$("v-list").innerHTML=C.icon("list");
@@ -759,17 +779,23 @@ var io=null,first=true,lastView=view;
 if(!reduce&&"IntersectionObserver" in window){
   io=new IntersectionObserver(function(es){
     var vis=es.filter(function(x){return x.isIntersecting;}).sort(function(a,b){return (a.boundingClientRect.top-b.boundingClientRect.top)||(a.boundingClientRect.left-b.boundingClientRect.left);});
-    vis.forEach(function(x,i){x.target.style.setProperty("--d",Math.min(i,8)*70+"ms");x.target.classList.add("in");io.unobserve(x.target);});
+    vis.forEach(function(x,i){
+      if(i<8){x.target.style.setProperty("--d",i*60+"ms");x.target.classList.add("in");}
+      else{x.target.classList.add("in","done");}
+      io.unobserve(x.target);
+    });
   },{rootMargin:"0px 0px -4% 0px",threshold:.04});
 }
 function rects(){var m={};qsa("[data-card]",list).forEach(function(el){m[el.getAttribute("data-card")]=el.getBoundingClientRect();});return m;}
-function renderList(items){
-  var old=(!first&&lastView===view)?rects():null;
-  list.className=view==="list"?"rows":"tiles";
-  list.innerHTML=items.map(view==="list"?lrow:tile).join("");
-  qsa("[data-card]",list).forEach(function(el){
-    var id=el.getAttribute("data-card"),r0=old&&old[id];
+var CHUNK=24,rest=[],restPos=0,moreIO=null,moreEl=null;
+function chunkHtml(from,to){var fn=view==="list"?lrow:tile,h="",i;for(i=from;i<to;i++){h+=fn(rest[i],i);}return h;}
+function decorate(els,old,still){
+  els.forEach(function(el,k){
+    var id=el.getAttribute("data-card");
+    if(C.S.done[id]){el.classList.add("is-done");}
+    if(C.S.saved[id]){el.classList.add("is-saved");}
     if(reduce){return;}
+    var r0=old&&old[id];
     if(r0){
       var r1=el.getBoundingClientRect(),dx=r0.left-r1.left,dy=r0.top-r1.top;
       if(Math.abs(dx)+Math.abs(dy)>1){
@@ -778,8 +804,41 @@ function renderList(items){
         el.style.transition="transform .6s cubic-bezier(.2,.8,.2,1)";el.style.transform="";
         (function(e){setTimeout(function(){e.style.transition="";},680);})(el);
       }
-    }else if(io){el.classList.add("reveal");io.observe(el);}
+    }else if(io&&!still&&k<9){el.classList.add("reveal");io.observe(el);}
   });
+}
+list.addEventListener("animationend",function(ev){var el=ev.target;if(el&&el.classList&&el.classList.contains("reveal")&&ev.animationName==="tilein"){el.classList.add("done");}});
+function dropMore(){
+  if(moreIO){moreIO.disconnect();moreIO=null;}
+  if(moreEl&&moreEl.parentNode){moreEl.parentNode.removeChild(moreEl);}
+  moreEl=null;
+}
+function armMore(){
+  dropMore();
+  if(restPos>=rest.length){return;}
+  moreEl=document.createElement("div");moreEl.className="more";moreEl.setAttribute("aria-hidden","true");
+  list.parentNode.insertBefore(moreEl,list.nextSibling);
+  if("IntersectionObserver" in window){
+    moreIO=new IntersectionObserver(function(es){if(es[0].isIntersecting){loadMore();}},{rootMargin:"1500px 0px"});
+    moreIO.observe(moreEl);
+  }else{while(restPos<rest.length){loadMore(true);}}
+}
+function loadMore(noArm){
+  var to=Math.min(rest.length,restPos+CHUNK),tpl=document.createElement("template");
+  tpl.innerHTML=chunkHtml(restPos,to);
+  var els=qsa("[data-card]",tpl.content);
+  list.appendChild(tpl.content);restPos=to;
+  decorate(els,null,true);
+  if(noArm){return;}
+  if(restPos>=rest.length){dropMore();}else if(moreIO&&moreEl){moreIO.unobserve(moreEl);moreIO.observe(moreEl);}
+}
+function renderList(items){
+  var old=(!first&&lastView===view)?rects():null;
+  list.className=view==="list"?"rows":"tiles";
+  rest=items;restPos=Math.min(items.length,CHUNK);
+  list.innerHTML=chunkHtml(0,restPos);
+  decorate(qsa("[data-card]",list),old);
+  armMore();
   first=false;lastView=view;
 }
 
@@ -788,19 +847,32 @@ function moveInd(){
   var ind=cats.querySelector(".ind");
   if(!ind){ind=document.createElement("i");ind.className="ind";cats.insertBefore(ind,cats.firstChild);}
   var inp=cats.querySelector("input:checked");if(!inp){return;}
-  var s=inp.parentNode;
-  ind.style.setProperty("--y",s.offsetTop+"px");ind.style.setProperty("--h",s.offsetHeight+"px");
+  var s=inp.parentNode,y=s.offsetTop,h=s.offsetHeight;
+  ind.style.setProperty("--y",y+"px");ind.style.setProperty("--h",h+"px");
   if(!ind.classList.contains("on")){requestAnimationFrame(function(){requestAnimationFrame(function(){ind.classList.add("on");});});}
 }
 function thumbs(){
-  qsa(".seg").forEach(function(seg){
+  var segs=qsa(".seg"),geo=[];
+  /* сначала читаем размеры, потом пишем: так раскладка пересчитывается один раз */
+  segs.forEach(function(seg,si){
+    var inputs=qsa("input",seg),idx=0;inputs.forEach(function(x,k){if(x.checked){idx=k;}});
+    var g={idx:idx,n:inputs.length};
+    if(seg.closest(".bg")){
+      var ck=seg.querySelector("input:checked"),sp=ck&&ck.parentNode;
+      if(sp&&sp.offsetWidth){g.tx=sp.offsetLeft;g.ty=sp.offsetTop;g.tw=sp.offsetWidth;g.th=sp.offsetHeight;}
+    }
+    geo[si]=g;
+  });
+  segs.forEach(function(seg,si){
+    var g=geo[si];
     if(!seg.querySelector(".thumb")){var t=document.createElement("i");t.className="thumb";seg.insertBefore(t,seg.firstChild);}
-    var idx=0;qsa("input",seg).forEach(function(x,k){if(x.checked){idx=k;}});
-    seg.style.setProperty("--i",idx);seg.style.setProperty("--n",qsa("input",seg).length);
+    seg.style.setProperty("--i",g.idx);seg.style.setProperty("--n",g.n);
+    if(g.tw){var th=seg.querySelector(".thumb");th.style.setProperty("--tx",g.tx+"px");th.style.setProperty("--ty",g.ty+"px");th.style.setProperty("--tw",g.tw+"px");th.style.setProperty("--th",g.th+"px");}
   });
   var vt=document.querySelector(".vt");if(vt){vt.style.setProperty("--i",view==="list"?1:0);}
 }
-function update(){moveInd();thumbs();}
+var upQ=false;
+function update(){if(upQ){return;}upQ=true;requestAnimationFrame(function(){upQ=false;moveInd();thumbs();});}
 window.addEventListener("resize",update);
 window.addEventListener("load",update);
 if(document.fonts&&document.fonts.ready){document.fonts.ready.then(update);}
@@ -920,14 +992,16 @@ document.addEventListener("keydown",function(ev){
 });
 
 /* прокрутка: полоса прогресса, параллакс неба, шапка */
-var tick=false;
+var tick=false,lastSp=-1,lastSy=-1,skyEl=$("sky");
 function onScroll(){
   if(tick){return;}tick=true;
   requestAnimationFrame(function(){
     tick=false;var y=window.pageYOffset,h=document.documentElement.scrollHeight-window.innerHeight;
     tb.classList.toggle("stuck",y>8);
-    tb.style.setProperty("--sp",h>0?Math.min(1,y/h):0);
-    if(!reduce){$("sky").style.setProperty("--sy",Math.min(y,900));}
+    var sp=h>0?Math.min(1,y/h):0;
+    if(sp!==lastSp){lastSp=sp;tb.style.setProperty("--sp",sp);}
+    var sy=Math.min(y,900);
+    if(!reduce&&sy!==lastSy){lastSy=sy;skyEl.style.transform="translate3d(0,"+(-sy*.14).toFixed(1)+"px,0)";}
     /* плитки, которые проскочили при быстрой прокрутке, проявляем сразу */
     qsa(".reveal:not(.in)",list).forEach(function(el){
       var r=el.getBoundingClientRect();

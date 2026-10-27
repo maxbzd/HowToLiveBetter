@@ -92,7 +92,7 @@ def build():
             miss=sorted(n for n in mine if n not in S and str(int(float(n)*1000)) not in S and not (float(n)<=3 and len(n)==1))
             if miss: warn.append((key,'numbers not found in source: '+','.join(miss)))
             ents.append(e)
-    js="/* СГЕНЕРИРОВАНО mkcontent.py: не править руками */\nE.push.apply(E,"+json.dumps(ents,ensure_ascii=False,indent=0)+");\n"
+    js="/* СГЕНЕРИРОВАНО mkcontent.py: не править руками */\nE.push.apply(E,"+json.dumps(ents,ensure_ascii=False,separators=(',',':'))+");\n"
     open(os.path.join(ROOT,'src','gen.js'),'w',encoding='utf-8').write(js)
     return ents,warn
 if __name__=='__main__':

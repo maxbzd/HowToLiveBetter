@@ -37,7 +37,7 @@ python3 tools/build.py       # собрать dist/index.html
 
 Затем откройте `dist/index.html` в браузере.
 
-Проверка: `pip install -r requirements.txt && playwright install chromium && python3 tests/sweep.py`
+Проверка: `pip install -r requirements.txt && playwright install chromium`, затем `python3 tests/sweep.py` (экраны и темы), `python3 tests/func.py` (работа сайта), `python3 tests/layout.py` (отступы), `python3 tests/perf.py` (скорость).
 
 ## Публикация на GitHub Pages
 
